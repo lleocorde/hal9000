@@ -18,3 +18,5 @@ bot.on('message',(message) => {
     );
   }
 });
+
+bot.login(process.env.DISCORD_BOT_TOKEN);
