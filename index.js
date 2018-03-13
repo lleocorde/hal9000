@@ -1,8 +1,8 @@
 const Discord = require('discord.js');
 const bot = new Discord.Client();
-//const sql = require('sqlite');
-//sql.open('./score.sqlite');
-//const prefix = "+";
+const sql = require('sqlite');
+sql.open('./score.sqlite');
+const bank = "!bank";
 
 bot.on('ready', () => {
     console.log('Ready!');
@@ -20,9 +20,49 @@ bot.on('message',(message) => {
     return;
   }
   
-  if(message.content.startsWith('!bank')) {
-    //message.channel.send('Your name is: '+message.author.username);
- /*
+  if(message.content.startsWith(bank)) {
+    var comm = message.content.slice(1).split(/ +/g);
+    switch (comm[1]) {
+      case 'bal':    
+    }
+    
+    sql.get(`SELECT * FROM scores WHERE userId ="${message.author.id}"`).then(row => {
+      if (!row) {
+        sql.run("INSERT INTO scores (userId, points, level) VALUES (?, ?, ?)", [message.author.id, 1, 0]);
+      } else {
+      
+      let curLevel = Math.floor(row.points/10);
+      if (curLevel > row.level) {
+        row.level = curLevel;
+        sql.run(`UPDATE scores SET points = ${row.points + 1}, level = ${row.level} WHERE userId = ${message.author.id}`);
+        message.reply(`You've leveled up to level **${curLevel}**! Ain't that dandy?`);
+      }
+      sql.run(`UPDATE scores SET points = ${row.points + 1} WHERE userId = ${message.author.id}`);
+    }
+  }).catch(() => {
+    console.error;
+    sql.run("CREATE TABLE IF NOT EXISTS artBank (userId TEXT, type TEXT, level INTEGER, quantity INTEGER)").then(() => {
+      sql.run("INSERT INTO scores (userId, points, level) VALUES (?, ?, ?)", [message.author.id, 1, 0]);
+    });
+  });
+
+  //if (!message.content.startsWith(prefix)) return;
+/*
+  if (message.content.startsWith(prefix + "level")) {
+    sql.get(`SELECT * FROM scores WHERE userId ="${message.author.id}"`).then(row => {
+      if (!row) return message.reply("Your current level is 0");
+      message.reply(`Your current level is ${row.level}`);
+    });
+  } else
+
+  if (message.content.startsWith(prefix + "points")) {
+    sql.get(`SELECT * FROM scores WHERE userId ="${message.author.id}"`).then(row => {
+      if (!row) return message.reply("sadly you do not have any points yet!");
+      message.reply(`you currently have ${row.points} points, good going!`);
+    });
+  }
+*/      
+/*
     if(message.member.roles.some(r=>["Dev", "Mod", "Server Staff", "Proficient"].includes(r.name)) ) {
       message.channel.send(message.author.username+' has role *Lunatic Prime*');
     } else {
