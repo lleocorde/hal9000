@@ -10,7 +10,9 @@ bot.on('ready', () => {
 
 bot.on('message',(message) => {
   if (message.author.bot) return; // Ignore bots.
-  if (message.channel.type === "dm") return; // Ignore DM channels.
+  if (message.channel.type === "dm") {//return; // Ignore DM channels.
+      message.channel.send('I\'m not setup for DMs yet...');
+  }
   //if(message.content.startsWith('!')) {
   if(message.content == '!test') {
     message.channel.send(
