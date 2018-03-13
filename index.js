@@ -20,7 +20,7 @@ bot.on('message',(message) => {
     return;
   }
   
-  if(message.content.startsWith('!')) {
+  if(message.content.startsWith('!bank')) {
     //message.channel.send('Your name is: '+message.author.username);
  /*
     if(message.member.roles.some(r=>["Dev", "Mod", "Server Staff", "Proficient"].includes(r.name)) ) {
@@ -30,8 +30,16 @@ bot.on('message',(message) => {
     }
 */
     let primeR = message.guild.roles.get(process.env.lPrime);
-    if(message.member.roles.has(primeR.id)) {message.channel.send(message.author.username+' has role'+primeR);}
-}
+    //if(message.member.roles.has(primeR.id)) {message.channel.send(message.author.username+' has role'+primeR);}
+    var args = message.content.slice(1).split(/ +/g);
+    message.channel.send('The Galactic Bank does not understand your command \'*'+args[1]+'*\'.');
+    return;
+  }
+
+  if(message.content.startsWith('!')) {
+    message.channel.send('\`'+message.content+'\` is not a currently recognized command.');
+  }
+  
 });
 
 bot.login(process.env.DISCORD_BOT_TOKEN);
