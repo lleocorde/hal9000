@@ -44,11 +44,33 @@ bot.on('message',(message) => {
       case 'help':
         message.channel.send(ref.bankHelp);
         break;
+      case 'bomb':
+        let aRole = message.guild.roles.get(process.env.lPrime);
+        var checkBomb = (reaction, user) => reaction.emoji.name === '✅' && user.id === message.author.id
+        message.delete()
+        const conf = message.channel.send(ref.bankBomb(message.member.roles.has(aRole.id),message.author.username))
+          conf.then(function(conf) {
+          conf.react('✅')
+          conf.react('🚫')
+          conf.awaitReactions(checkBomb, {time: 10000 })
+            .then(collected => {
+             switch (collected.size) {
+               case 1:
+                 message.channel.send('Confirmed. The Galactic Bank will be reset to NULL...');
+                 break;
+               default:
+                 message.channel.send('Wipe Cancelled.');
+                 conf.delete();
+                 break;
+             }
+          });
+        });
+        break;
       case undefined:
         message.channel.send(ref.bankNull);
         break;
       default:
-        message.channel.send('The Galactic Bank does not recognize the command \'*'+comm[1]+'*\'... yet. Try \`!bank help\` for instructions.');
+        message.channel.send(ref.unkF(comm[1]));
         break;
     };
     return;
